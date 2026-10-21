@@ -2,3 +2,4 @@
 __pycache__/
 .venv/
 .preview/
+.claude/handoff-nudge-state.json
