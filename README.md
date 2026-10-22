@@ -71,4 +71,6 @@ docs/             Developer documentation
 
 ## Status
 
-The pure logic is covered by unit tests. The rendering and input code follows the Badgeware API documentation and the sample apps shipped on the badge, but it has no automated tests, so check changes on a badge. [docs/testing-and-debugging.md](docs/testing-and-debugging.md) lists the things still worth confirming on hardware.
+- **Raven Pet** has been installed and run on a Tufty 2350 and works.
+- **Raven** has not yet been confirmed on a badge.
+- The pure logic is covered by unit tests. The rendering and input code has no automated tests, so check changes on a badge. [docs/testing-and-debugging.md](docs/testing-and-debugging.md) lists the things still worth confirming on hardware.

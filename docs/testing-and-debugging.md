@@ -48,11 +48,12 @@ After [installing](getting-started.md#install-an-app-on-the-badge), run through 
 
 ## Things still worth confirming on a badge
 
-These are the places where the code follows the sample apps and the docs, but nothing in this repo checks them automatically:
+Raven Pet has been installed and run on a Tufty 2350 and works. That covers sprite sheets (`SpriteSheet` / `animation()`, which the API pages don't document by those names), button handling, `State`, and the `rnd` message picker. The **Raven** (first) app has not been confirmed on a badge yet, though it uses the same sprite and button calls.
 
-- **QR scan reliability.** The long messages use 3 pixels per module and a 2-module border.
-- **`SpriteSheet` / `animation()`** are used as in the sample apps. The API pages document different names for similar calls.
-- **`on_exit()`** is used in the sample apps but is not in the API pages. The pet doesn't depend on it.
+Still unconfirmed, because nothing in this repo checks them automatically:
+
+- **QR scan reliability for the longest messages.** They use 3 pixels per module and a 2-module border. Scanning a level-3 message with a phone is the one check not yet recorded.
+- **`on_exit()`** is used in the sample apps but is not in the API pages. The pet doesn't depend on it, since it saves after every feed and train.
 
 ## When an app crashes
 
