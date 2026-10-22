@@ -51,7 +51,6 @@ After [installing](getting-started.md#install-an-app-on-the-badge), run through 
 These are the places where the code follows the sample apps and the docs, but nothing in this repo checks them automatically:
 
 - **QR scan reliability.** The long messages use 3 pixels per module and a 2-module border.
-- **`random.getrandbits`** for picking messages. If `import random` raises an error, switch to the builtin `rnd` (see [App anatomy](app-anatomy.md#randomness)).
 - **`SpriteSheet` / `animation()`** are used as in the sample apps. The API pages document different names for similar calls.
 - **`on_exit()`** is used in the sample apps but is not in the API pages. The pet doesn't depend on it.
 

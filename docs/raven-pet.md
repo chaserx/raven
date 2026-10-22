@@ -57,7 +57,7 @@ So a freshly fed raven looks **sad after 90 minutes**, and fullness would reach 
 
 `pick_message(messages, level, rand)` builds a pool of every message whose tier is at most the raven's level, then picks one at random. It returns an **index**, which is also the number in the QR file name (`assets/qr/07.png` belongs to `MESSAGES[7]`).
 
-`rand(n)` must return an integer in `range(n)`. The app passes `lambda n: random.getrandbits(16) % n`. Tests pass a deterministic function. If `import random` ever fails on the badge, the firmware also provides a builtin `rnd(n)`, which returns an integer from 0 to n inclusive, so the replacement is `lambda n: rnd(n - 1)`. See [App anatomy](app-anatomy.md#randomness).
+`rand(n)` must return an integer in `range(n)`. The app passes `lambda n: rnd(n - 1)`, because the firmware's builtin `rnd(n)` returns an integer from 0 to n **inclusive**. Tests pass a deterministic function. See [App anatomy](app-anatomy.md#randomness).
 
 ## Saved state
 

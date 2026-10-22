@@ -4,7 +4,6 @@ import os
 sys.path.insert(0, "/system/apps/raven_pet")
 os.chdir("/system/apps/raven_pet")
 
-import random
 from badgeware import State
 from pet import Pet, pick_message
 from messages import MESSAGES
@@ -58,7 +57,7 @@ def update():
 
     if badge.pressed(BUTTON_C):
         # any raven can send a message, but only ones its level allows
-        index = pick_message(MESSAGES, pet.level, lambda n: random.getrandbits(16) % n)
+        index = pick_message(MESSAGES, pet.level, lambda n: rnd(n - 1))
         qr = image.load(f"assets/qr/{index:02d}.png")
         return
 
