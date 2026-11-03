@@ -5,7 +5,7 @@ Two Game of Thrones themed apps for the [Pimoroni Badger Tufty 2350](https://bad
 | App | Folder | What it does | Buttons |
 | --- | --- | --- | --- |
 | **Raven** | [`raven/`](raven/) | A pixel-art raven flies across a moonlit castle skyline, leaves the screen, and flies back in from the same edge a few seconds later. | **A** sends the raven |
-| **Raven Pet** | [`raven_pet/`](raven_pet/) | A virtual pet raven. Feed it, train it, or have it send a QR code linking to https://engineeringmaester.com/next. | **A** feed, **B** train, **C** show QR code |
+| **Raven Pet** | [`raven_pet/`](raven_pet/) | A virtual pet raven. Feed it, train it, or have it send a QR code linking to https://engineeringmaester.com/r/next. | **A** feed, **B** train, **C** show QR code |
 
 Both apps use the same night-sky scene and are written in MicroPython against Pimoroni's [Badgeware](https://github.com/pimoroni/badgeware-docs) API.
 

@@ -1,6 +1,6 @@
 # Raven Pet app
 
-The second app: a virtual pet raven, in the style of a Tamagotchi. Feed it, train it, and have it send a QR code linking to https://engineeringmaester.com/next.
+The second app: a virtual pet raven, in the style of a Tamagotchi. Feed it, train it, and have it send a QR code linking to https://engineeringmaester.com/r/next.
 
 Folder: [`raven_pet/`](../raven_pet/). Menu name: **Raven Pet**.
 
@@ -94,7 +94,7 @@ During a feed or train, the app alternates the pose with frame 0 every 150 ms fo
 
 ## The QR code screen
 
-Pressing **C** loads `assets/qr.png` and shows it centred on a dark background. Scanning it with a phone camera offers to open https://engineeringmaester.com/next. See [Art and QR codes](art-and-qr.md#qr-code) for how the code is generated and why its size is limited.
+Pressing **C** loads `assets/qr.png` and shows it centred on a dark background. Scanning it with a phone camera offers to open https://engineeringmaester.com/r/next. See [Art and QR codes](art-and-qr.md#qr-code) for how the code is generated and why its size is limited.
 
 ## Tuning
 

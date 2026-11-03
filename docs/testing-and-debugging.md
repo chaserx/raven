@@ -39,7 +39,7 @@ After [installing](getting-started.md#install-an-app-on-the-badge), run through 
 - [ ] **A** shows the berry animation and "Yum!".
 - [ ] **B** shows "Training 1/3", "Training 2/3", then "Level 2!". The level in the corner changes.
 - [ ] **C** shows the same QR code every time, at every level.
-- [ ] **A phone camera scans the QR code** and offers to open https://engineeringmaester.com/next.
+- [ ] **A phone camera scans the QR code** and offers to open https://engineeringmaester.com/r/next.
 - [ ] Any button closes the QR code.
 - [ ] Quit and reopen the app: the level and fullness are restored.
 - [ ] Temporarily set `SAD_AFTER_S` to `30` in `pet.py`, reinstall, and wait. The raven should droop and the bar should turn red, and feeding should fix both.

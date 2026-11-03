@@ -16,7 +16,7 @@ from make_assets import (BODY, CLEAR, EYE, RIM, WING, canvas, ellipse,
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 OUT = os.path.join(ROOT, "raven_pet")
 
-QR_URL = "https://engineeringmaester.com/next"
+QR_URL = "https://engineeringmaester.com/r/next"
 
 TEAR = (110, 170, 255, 255)
 BERRY = (210, 50, 60, 255)
