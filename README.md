@@ -5,7 +5,7 @@ Two Game of Thrones themed apps for the [Pimoroni Badger Tufty 2350](https://bad
 | App | Folder | What it does | Buttons |
 | --- | --- | --- | --- |
 | **Raven** | [`raven/`](raven/) | A pixel-art raven flies across a moonlit castle skyline, leaves the screen, and flies back in from the same edge a few seconds later. | **A** sends the raven |
-| **Raven Pet** | [`raven_pet/`](raven_pet/) | A virtual pet raven. Feed it, train it, or have it send a message as a QR code. Training unlocks longer messages. | **A** feed, **B** train, **C** send message |
+| **Raven Pet** | [`raven_pet/`](raven_pet/) | A virtual pet raven. Feed it, train it, or have it send a QR code linking to https://engineeringmaester.com/next. | **A** feed, **B** train, **C** show QR code |
 
 Both apps use the same night-sky scene and are written in MicroPython against Pimoroni's [Badgeware](https://github.com/pimoroni/badgeware-docs) API.
 
@@ -36,7 +36,7 @@ python3 tools/make_assets.py                   # raven/ art
 .venv/bin/python tools/make_pet_assets.py      # raven_pet/ art and QR codes
 ```
 
-Only the pure logic (`flight.py`, `pet.py`, `messages.py`) can run on a normal computer. Anything that touches the screen, buttons or saved state needs a badge, or the Badgeware simulator. See [docs/testing-and-debugging.md](docs/testing-and-debugging.md).
+Only the pure logic (`flight.py`, `pet.py`) can run on a normal computer. Anything that touches the screen, buttons or saved state needs a badge, or the Badgeware simulator. See [docs/testing-and-debugging.md](docs/testing-and-debugging.md).
 
 ## Repository layout
 
@@ -48,9 +48,8 @@ raven/            App 1: the flying raven (this folder is what gets copied to th
   icon.png          24x24 menu icon
 raven_pet/        App 2: the virtual pet raven
   __init__.py       app entry point: input, drawing, QR screen, saving
-  pet.py            pure pet logic: hunger, levels, message choice
-  messages.py       the Game of Thrones style messages and their tiers
-  assets/           background.png, raven_pet.png, qr/NN.png (one per message)
+  pet.py            pure pet logic: hunger, levels
+  assets/           background.png, raven_pet.png, qr.png
   icon.png
 tools/            Pixel-art and QR generators (run on your computer, not the badge)
 tests/            Unit tests for the pure logic
@@ -65,7 +64,7 @@ docs/             Developer documentation
 | [App anatomy](docs/app-anatomy.md) | understand how a Badgeware app is put together and which API calls these apps use |
 | [Raven app](docs/raven-app.md) | change the flight timing or art of the first app |
 | [Raven Pet app](docs/raven-pet.md) | change the pet's behaviour, levels or UI |
-| [Art and QR codes](docs/art-and-qr.md) | regenerate sprites, or add and edit messages |
+| [Art and QR codes](docs/art-and-qr.md) | regenerate sprites, or change the QR code's link |
 | [Testing and debugging](docs/testing-and-debugging.md) | run the tests, check an app on the badge, and find out why it crashed |
 | [References](docs/references.md) | find the official Pimoroni, GitHub and MicroPython documentation |
 

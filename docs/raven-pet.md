@@ -1,6 +1,6 @@
 # Raven Pet app
 
-The second app: a virtual pet raven, in the style of a Tamagotchi. Feed it, train it, and have it send a Game of Thrones style message as a QR code.
+The second app: a virtual pet raven, in the style of a Tamagotchi. Feed it, train it, and have it send a QR code linking to https://engineeringmaester.com/next.
 
 Folder: [`raven_pet/`](../raven_pet/). Menu name: **Raven Pet**.
 
@@ -10,14 +10,14 @@ Folder: [`raven_pet/`](../raven_pet/). Menu name: **Raven Pet**.
 | --- | --- | --- |
 | **A** | Feed | The raven pecks a berry. Its fullness returns to 100%. Toast: "Yum!" |
 | **B** | Train | The raven flings a wing up. Toast: "Training 1/3", "Training 2/3", then "Level 2!". At the top level: "Fully trained!" |
-| **C** | Send a message | A full-screen QR code. Any button closes it. |
+| **C** | Show the QR code | A full-screen QR code, the same one every time. Any button closes it. |
 
 The top-left of the screen shows the raven's level (`Lv 1`) and a fullness bar. The bar turns red when the raven is sad.
 
 Design rules:
 
 - **The raven never dies.** Neglect only makes it look sad (drooped head, a tear), and one feeding cures it.
-- **A message can be sent at any time.** The raven's mood doesn't gate it. Only its **level** does, because training unlocks longer messages.
+- **The QR code can be shown at any time.** Neither the raven's mood nor its level gates it.
 - **Training is quick.** Three presses per level and three levels, so six presses reach the top. A stranger can do it in one sitting.
 
 ## Files
@@ -25,21 +25,20 @@ Design rules:
 | File | Purpose |
 | --- | --- |
 | `__init__.py` | The app: input, drawing, toasts, the QR screen, saving. |
-| `pet.py` | Pure logic: the `Pet` class (fullness, training, levels, save/load) and `pick_message()`. No badge APIs, so it is unit tested on a normal computer. |
-| `messages.py` | The list of `(tier, text)` messages. |
+| `pet.py` | Pure logic: the `Pet` class (fullness, training, levels, save/load). No badge APIs, so it is unit tested on a normal computer. |
 | `assets/raven_pet.png` | The pet sprite sheet. |
-| `assets/qr/NN.png` | One pre-rendered QR code per message, numbered by position in `MESSAGES`. |
+| `assets/qr.png` | The pre-rendered QR code. |
 | `assets/background.png` | The night-sky scene, shared with the first app. |
 
 ## Levels
 
-| Level | Reached after | Messages it can send |
-| --- | --- | --- |
-| 1 | start | tier 1 (up to 30 characters) |
-| 2 | 3 training presses | tiers 1 and 2 (up to 45 characters) |
-| 3 | 6 training presses | tiers 1, 2 and 3 (up to 70 characters) |
+| Level | Reached after |
+| --- | --- |
+| 1 | start |
+| 2 | 3 training presses |
+| 3 | 6 training presses |
 
-Further training at level 3 does nothing and shows "Fully trained!". The constants are `TRAINS_PER_LEVEL = 3` and `MAX_LEVEL = 3` in [`pet.py`](../raven_pet/pet.py).
+Levels are cosmetic: they change the `Lv N` label and nothing else. Further training at level 3 does nothing and shows "Fully trained!". The constants are `TRAINS_PER_LEVEL = 3` and `MAX_LEVEL = 3` in [`pet.py`](../raven_pet/pet.py).
 
 ## Hunger
 
@@ -52,12 +51,6 @@ DECAY_PER_S = (FULL - SAD_BELOW) / SAD_AFTER_S = (100 - 40) / (90 * 60)
 So a freshly fed raven looks **sad after 90 minutes**, and fullness would reach 0 after 150 minutes. It never goes below 0. The raven is sad whenever `fullness < SAD_BELOW` (40).
 
 **Hunger only advances while the app is open.** The app measures time with `badge.ticks_delta`, which is milliseconds since the previous frame and not wall-clock time. If you close the app or power the badge off, the raven's hunger is frozen until the next time you open it. That suits a costume prop (a raven in your pocket doesn't starve), but it is a deliberate trade-off. Real elapsed time would need an RTC and Wi-Fi time sync (see the [rtc reference](https://github.com/pimoroni/badgeware-docs/blob/main/api/rtc.md)).
-
-## Choosing a message
-
-`pick_message(messages, level, rand)` builds a pool of every message whose tier is at most the raven's level, then picks one at random. It returns an **index**, which is also the number in the QR file name (`assets/qr/07.png` belongs to `MESSAGES[7]`).
-
-`rand(n)` must return an integer in `range(n)`. The app passes `lambda n: rnd(n - 1)`, because the firmware's builtin `rnd(n)` returns an integer from 0 to n **inclusive**. Tests pass a deterministic function. See [App anatomy](app-anatomy.md#randomness).
 
 ## Saved state
 
@@ -101,7 +94,7 @@ During a feed or train, the app alternates the pose with frame 0 every 150 ms fo
 
 ## The QR code screen
 
-Pressing **C** loads `assets/qr/NN.png` and shows it centred on a dark background. It is plain text inside the QR code, so any phone camera shows the message straight away. See [Art and QR codes](art-and-qr.md#qr-codes) for how the codes are generated and why they are limited in size.
+Pressing **C** loads `assets/qr.png` and shows it centred on a dark background. Scanning it with a phone camera offers to open https://engineeringmaester.com/next. See [Art and QR codes](art-and-qr.md#qr-code) for how the code is generated and why its size is limited.
 
 ## Tuning
 
@@ -115,6 +108,6 @@ Pressing **C** loads `assets/qr/NN.png` and shows it centred on a dark backgroun
 
 To try the sad state without waiting 90 minutes, temporarily set `SAD_AFTER_S` to something like `30` and reinstall the app.
 
-## Adding or changing messages
+## Changing the QR code's link
 
-Edit [`raven_pet/messages.py`](../raven_pet/messages.py), then regenerate the QR images and copy the app to the badge. The tier length limits are enforced by `tests/test_pet.py` and by the generator. Full steps are in [Art and QR codes](art-and-qr.md#adding-or-changing-a-message).
+Edit `QR_URL` in [`tools/make_pet_assets.py`](../tools/make_pet_assets.py), then regenerate the QR image and copy the app to the badge. Full steps are in [Art and QR codes](art-and-qr.md#changing-the-link).

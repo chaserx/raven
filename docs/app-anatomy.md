@@ -116,7 +116,7 @@ State.save("raven_pet", {"fullness": 80, "trainings": 2})
 
 ## Randomness
 
-The firmware provides `rnd(n)` as a builtin ([builtins reference](https://github.com/pimoroni/badgeware-docs/blob/main/api/builtins.md)). It returns a random integer from 0 to n **inclusive**, so to pick an index into a list of length `n`, call `rnd(n - 1)`. `raven_pet` uses it to choose a message (see [Raven Pet app](raven-pet.md#choosing-a-message)). It needs no import.
+The firmware provides `rnd(n)` as a builtin ([builtins reference](https://github.com/pimoroni/badgeware-docs/blob/main/api/builtins.md)). It returns a random integer from 0 to n **inclusive**, so to pick an index into a list of length `n`, call `rnd(n - 1)`. It needs no import. Neither app currently uses it.
 
 ## Icon
 

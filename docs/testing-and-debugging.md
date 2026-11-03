@@ -13,9 +13,7 @@ They need only Python 3. They cover the logic that doesn't touch the badge:
 | File | Covers |
 | --- | --- |
 | `tests/test_flight.py` | The raven enters from the left, leaves by the right, is invisible while away, returns from the right facing left, finishes, only uses frames that exist, and stays on screen |
-| `tests/test_pet.py` | Hunger timing (sad just after 90 minutes, never below zero), feeding, three trainings per level, reaching and holding the top level, save/load and clamping bad data, and message selection by level |
-
-The tests also check the data: every message tier has entries, every message is ASCII and within its tier's length limit.
+| `tests/test_pet.py` | Hunger timing (sad just after 90 minutes, never below zero), feeding, three trainings per level, reaching and holding the top level, and save/load and clamping bad data |
 
 Why the logic is split into `flight.py` and `pet.py`: those files import nothing from the badge, so they run anywhere. Keep new logic there, and keep `__init__.py` thin.
 
@@ -40,19 +38,19 @@ After [installing](getting-started.md#install-an-app-on-the-badge), run through 
 - [ ] The menu shows **Raven Pet** with its icon, and the raven sits on the ground line.
 - [ ] **A** shows the berry animation and "Yum!".
 - [ ] **B** shows "Training 1/3", "Training 2/3", then "Level 2!". The level in the corner changes.
-- [ ] At level 1, **C** only ever shows short messages. After reaching level 3, longer ones appear.
-- [ ] **A phone camera scans the QR code** and shows the text. Check a long (tier-3) message too, as it has the smallest modules.
+- [ ] **C** shows the same QR code every time, at every level.
+- [ ] **A phone camera scans the QR code** and offers to open https://engineeringmaester.com/next.
 - [ ] Any button closes the QR code.
 - [ ] Quit and reopen the app: the level and fullness are restored.
 - [ ] Temporarily set `SAD_AFTER_S` to `30` in `pet.py`, reinstall, and wait. The raven should droop and the bar should turn red, and feeding should fix both.
 
 ## Things still worth confirming on a badge
 
-Raven Pet has been installed and run on a Tufty 2350 and works. That covers sprite sheets (`SpriteSheet` / `animation()`, which the API pages don't document by those names), button handling, `State`, and the `rnd` message picker. The **Raven** (first) app has not been confirmed on a badge yet, though it uses the same sprite and button calls.
+Raven Pet has been installed and run on a Tufty 2350 and works. That covers sprite sheets (`SpriteSheet` / `animation()`, which the API pages don't document by those names), button handling, and `State`. The **Raven** (first) app has not been confirmed on a badge yet, though it uses the same sprite and button calls.
 
 Still unconfirmed, because nothing in this repo checks them automatically:
 
-- **QR scan reliability for the longest messages.** They use 3 pixels per module and a 2-module border. Scanning a level-3 message with a phone is the one check not yet recorded.
+- **QR scan reliability.** The code uses 3 pixels per module and a 2-module border. Scanning it on the badge with a phone is the one check not yet recorded.
 - **`on_exit()`** is used in the sample apps but is not in the API pages. The pet doesn't depend on it, since it saves after every feed and train.
 
 ## When an app crashes
@@ -63,7 +61,7 @@ Common causes in this repo:
 
 | Symptom | Likely cause |
 | --- | --- |
-| `ImportError` for `flight`, `pet` or `messages` | The folder on the badge doesn't match the path in the app's `sys.path.insert(...)` line, or a file didn't get copied |
+| `ImportError` for `flight` or `pet` | The folder on the badge doesn't match the path in the app's `sys.path.insert(...)` line, or a file didn't get copied |
 | `OSError` when loading an image | A file is missing from `assets/`, or the `os.chdir` path is wrong |
 | The app is missing from the menu | The folder has no `__init__.py`, or it was copied to the wrong place |
 | The menu entry looks right but the icon is blank | `icon.png` is missing or not 24 x 24 |
@@ -105,6 +103,6 @@ Pimoroni publishes a [Badgeware simulator](https://github.com/pimoroni/badgeware
 ## Debugging approach
 
 1. Reproduce on the badge and read the on-screen error.
-2. If it's logic (timing, levels, messages), write a failing test in `tests/` first. Those files run in milliseconds.
+2. If it's logic (timing, levels), write a failing test in `tests/` first. Those files run in milliseconds.
 3. If it's visual, change one thing, reinstall, and look. For pet poses, `.preview/pets.png` shows the result without touching the badge.
 4. Keep `__init__.py` small, so that most bugs land in testable files.

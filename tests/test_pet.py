@@ -5,9 +5,6 @@ import unittest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "raven_pet"))
 
 import pet
-from messages import MESSAGES
-
-TIER_LIMITS = {1: 30, 2: 45, 3: 70}
 
 
 class PetTest(unittest.TestCase):
@@ -75,28 +72,6 @@ class PetTest(unittest.TestCase):
         p.load({"fullness": -5, "trainings": -1})
         self.assertEqual(p.fullness, 0)
         self.assertEqual(p.trainings, 0)
-
-
-class MessageTest(unittest.TestCase):
-    def test_every_tier_has_messages(self):
-        for tier in TIER_LIMITS:
-            self.assertTrue([m for t, m in MESSAGES if t == tier], tier)
-
-    def test_messages_fit_their_tier_and_are_ascii(self):
-        for tier, text in MESSAGES:
-            self.assertLessEqual(len(text), TIER_LIMITS[tier], text)
-            text.encode("ascii")
-
-    def test_lower_levels_only_send_messages_they_have_earned(self):
-        for level in (1, 2, 3):
-            for pick in range(len(MESSAGES)):
-                index = pet.pick_message(MESSAGES, level, lambda n, pick=pick: pick % n)
-                self.assertLessEqual(MESSAGES[index][0], level)
-
-    def test_top_level_can_send_every_message(self):
-        seen = {pet.pick_message(MESSAGES, 3, lambda n, k=k: k % n)
-                for k in range(len(MESSAGES))}
-        self.assertEqual(seen, set(range(len(MESSAGES))))
 
 
 if __name__ == "__main__":

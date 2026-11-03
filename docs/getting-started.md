@@ -78,4 +78,4 @@ sync
 
 - [App anatomy](app-anatomy.md): how a Badgeware app works, and which calls these apps use.
 - [Testing and debugging](testing-and-debugging.md): tests, serial access, and a checklist for trying an app on the badge.
-- [Art and QR codes](art-and-qr.md): regenerate the sprites or change the messages.
+- [Art and QR codes](art-and-qr.md): regenerate the sprites or change the QR code's link.

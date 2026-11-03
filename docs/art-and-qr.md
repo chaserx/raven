@@ -10,10 +10,10 @@ python3 -m venv .venv
 .venv/bin/pip install -r tools/requirements.txt
 
 python3 tools/make_assets.py                 # raven/: background.png, raven.png, icon.png
-.venv/bin/python tools/make_pet_assets.py    # raven_pet/: sprites, icon, qr/NN.png
+.venv/bin/python tools/make_pet_assets.py    # raven_pet/: sprites, icon, qr.png
 ```
 
-`make_assets.py` uses only the Python standard library (it writes PNGs itself). `make_pet_assets.py` also needs [`segno`](https://segno.readthedocs.io/) for QR codes, which is pinned in [`tools/requirements.txt`](../tools/requirements.txt).
+`make_assets.py` uses only the Python standard library (it writes PNGs itself). `make_pet_assets.py` also needs [`segno`](https://segno.readthedocs.io/) for the QR code, which is pinned in [`tools/requirements.txt`](../tools/requirements.txt).
 
 `make_pet_assets.py` copies `raven/assets/background.png` into `raven_pet/assets/` so the two apps share one scene. **Run `make_assets.py` first** if you change the background. It also writes an enlarged preview of the pet in four poses to `.preview/pets.png`, which git ignores.
 
@@ -28,7 +28,7 @@ After regenerating, copy the app to the badge (see [Getting started](getting-sta
 | `raven/icon.png` | `make_assets.py` | 24 x 24 |
 | `raven_pet/assets/raven_pet.png` | `make_pet_assets.py` | 240 x 48, 5 frames of 48 x 48; see [Raven Pet app](raven-pet.md#sprite-sheet) |
 | `raven_pet/icon.png` | `make_pet_assets.py` | 24 x 24 |
-| `raven_pet/assets/qr/NN.png` | `make_pet_assets.py` | one per message |
+| `raven_pet/assets/qr.png` | `make_pet_assets.py` | 99 x 99, links to `QR_URL` |
 
 ## How the pixel art is drawn
 
@@ -41,39 +41,25 @@ Two details are worth knowing:
 
 To change a pose, edit `pet_frame()` in `make_pet_assets.py` (or `raven_frame()` and `WING_TIPS` in `make_assets.py`), regenerate, and look at the result. `.preview/pets.png` is the quickest way to see the pet in place.
 
-## QR codes
+## QR code
 
-Each message in [`messages.py`](../raven_pet/messages.py) becomes a pre-rendered PNG, `assets/qr/NN.png`, where `NN` is the message's position in the list. The badge only has to show an image, so it needs no QR library.
+The app shows one QR code, `assets/qr.png`, which links to `QR_URL` in [`make_pet_assets.py`](../tools/make_pet_assets.py). The badge only has to show an image, so it needs no QR library.
 
-No QR support turned up in the files on the badge, and the Badgeware API pages do not list any, so the codes are rendered ahead of time. This also means **messages are fixed at build time**: the badge can't encode new text.
+No QR support turned up in the files on the badge, and the Badgeware API pages do not list any, so the code is rendered ahead of time. This also means **the link is fixed at build time**: the badge can't encode a new one.
 
 The generator:
 
-- Encodes each message with `segno` at error-correction level **L**, which gives the smallest code and so the biggest modules.
+- Encodes the link with `segno` at error-correction level **L**, which gives the smallest code and so the biggest modules.
 - Uses a **2-module white border** (the standard asks for 4). Phone cameras are generally tolerant, and the smaller border lets a larger code fit the 120-pixel-high screen. If a phone struggles to scan, this is the first thing to widen.
-- Picks the largest whole number of pixels per module that fits in 116 px, and **fails the build** if that would be under 3 px per module, so a message that is too long can't silently produce a code that is too small to scan.
+- Picks the largest whole number of pixels per module that fits in 116 px, and **fails the build** if that would be under 3 px per module, so a link that is too long can't silently produce a code that is too small to scan.
 
-| Size of code | Pixels per module | Image size | Messages that need it |
-| --- | --- | --- | --- |
-| 21 x 21 | 4 | 100 px | the shortest tier-1 lines |
-| 25 x 25 | 4 | 116 px | most tier-1 lines |
-| 29 x 29 | 3 | 99 px | tier-2 lines |
-| 33 x 33 | 3 | 111 px | tier-3 lines |
-
-Larger codes pack more data into the same screen, so the pixels per module drop. The tier limits in `tests/test_pet.py` (30, 45 and 70 characters) keep every message within a 33 x 33 code.
+The current link produces a 29 x 29 code at 3 pixels per module, so a 99 x 99 image. Longer links need larger codes, which pack more data into the same screen.
 
 Background on QR codes and their capacity: [QR code (Wikipedia)](https://en.wikipedia.org/wiki/QR_code).
 
-## Adding or changing a message
+## Changing the link
 
-1. Edit `raven_pet/messages.py`. Each entry is `(tier, text)`:
-   - Use plain ASCII (the test enforces it).
-   - Keep to the tier's length limit: tier 1 up to 30 characters, tier 2 up to 45, tier 3 up to 70.
-2. Run the tests: `python3 -m unittest discover -s tests`.
-3. Regenerate: `.venv/bin/python tools/make_pet_assets.py`. It prints every code's size.
-4. Scan a couple of the new codes from your screen with a phone.
-5. Copy `raven_pet/` to the badge.
-
-The generator deletes and rebuilds `assets/qr/` each run, so removed or reordered messages never leave stale files behind. Because the file number is the list position, reordering messages renumbers the files. That is fine, as long as you regenerate and copy them all.
-
-To add a **level**, raise `MAX_LEVEL` in `pet.py`, add messages with the new tier number, and extend `TIER_LIMITS` in `tests/test_pet.py` (and check the generator can fit them in a scannable code).
+1. Edit `QR_URL` in `tools/make_pet_assets.py`.
+2. Regenerate: `.venv/bin/python tools/make_pet_assets.py`. It prints the code's size.
+3. Scan the new `raven_pet/assets/qr.png` from your screen with a phone.
+4. Copy `raven_pet/` to the badge.

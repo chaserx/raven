@@ -5,8 +5,7 @@ sys.path.insert(0, "/system/apps/raven_pet")
 os.chdir("/system/apps/raven_pet")
 
 from badgeware import State
-from pet import Pet, pick_message
-from messages import MESSAGES
+from pet import Pet
 
 background = image.load("assets/background.png")
 sprites = SpriteSheet("assets/raven_pet.png", 5, 1)
@@ -56,9 +55,7 @@ def update():
         save()
 
     if badge.pressed(BUTTON_C):
-        # any raven can send a message, but only ones its level allows
-        index = pick_message(MESSAGES, pet.level, lambda n: rnd(n - 1))
-        qr = image.load(f"assets/qr/{index:02d}.png")
+        qr = image.load("assets/qr.png")
         return
 
     draw_scene()

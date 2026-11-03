@@ -45,11 +45,3 @@ class Pet:
     def load(self, state):
         self.fullness = max(0, min(FULL, state["fullness"]))
         self.trainings = max(0, min(MAX_TRAININGS, state["trainings"]))
-
-
-def pick_message(messages, level, rand):
-    # messages is a list of (tier, text). a raven can send anything up to its
-    # own level. rand(n) must return an int in range(n). returns an index so
-    # the caller can find the matching pre-rendered QR image.
-    pool = [i for i, (tier, _) in enumerate(messages) if tier <= level]
-    return pool[rand(len(pool))]

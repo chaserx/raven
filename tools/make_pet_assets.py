@@ -15,8 +15,8 @@ from make_assets import (BODY, CLEAR, EYE, RIM, WING, canvas, ellipse,
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 OUT = os.path.join(ROOT, "raven_pet")
-sys.path.insert(0, OUT)
-from messages import MESSAGES  # noqa: E402
+
+QR_URL = "https://engineeringmaester.com/next"
 
 TEAR = (110, 170, 255, 255)
 BERRY = (210, 50, 60, 255)
@@ -125,28 +125,24 @@ def make_icon():
     write_png(os.path.join(OUT, "icon.png"), img)
 
 
-def make_qr_codes():
-    qr_dir = os.path.join(OUT, "assets", "qr")
-    shutil.rmtree(qr_dir, ignore_errors=True)
-    os.makedirs(qr_dir)
+def make_qr_code():
     quiet = 2  # modules of white around the code; phones cope with this fine
-    for i, (_, text) in enumerate(MESSAGES):
-        qr = segno.make(text, error="l", micro=False, boost_error=False)
-        matrix = [list(row) for row in qr.matrix]
-        n = len(matrix)
-        scale = 116 // (n + 2 * quiet)
-        assert scale >= 3, f"message {i} needs a QR too big to scan ({n} modules)"
-        side = (n + 2 * quiet) * scale
-        white, black = (255, 255, 255, 255), (0, 0, 0, 255)
-        img = canvas(side, side, white)
-        for my in range(n):
-            for mx in range(n):
-                if matrix[my][mx]:
-                    for sy in range(scale):
-                        for sx in range(scale):
-                            img[(my + quiet) * scale + sy][(mx + quiet) * scale + sx] = black
-        write_png(os.path.join(qr_dir, f"{i:02d}.png"), img)
-        print(f"qr {i:02d}: {n}x{n} modules at {scale}px -> {side}px  {text!r}")
+    qr = segno.make(QR_URL, error="l", micro=False, boost_error=False)
+    matrix = [list(row) for row in qr.matrix]
+    n = len(matrix)
+    scale = 116 // (n + 2 * quiet)
+    assert scale >= 3, f"QR_URL needs a QR too big to scan ({n} modules)"
+    side = (n + 2 * quiet) * scale
+    white, black = (255, 255, 255, 255), (0, 0, 0, 255)
+    img = canvas(side, side, white)
+    for my in range(n):
+        for mx in range(n):
+            if matrix[my][mx]:
+                for sy in range(scale):
+                    for sx in range(scale):
+                        img[(my + quiet) * scale + sy][(mx + quiet) * scale + sx] = black
+    write_png(os.path.join(OUT, "assets", "qr.png"), img)
+    print(f"qr: {n}x{n} modules at {scale}px -> {side}px  {QR_URL!r}")
 
 
 def make_preview(frames):
@@ -191,6 +187,6 @@ if __name__ == "__main__":
                 os.path.join(OUT, "assets", "background.png"))
     frames = make_sheet()
     make_icon()
-    make_qr_codes()
+    make_qr_code()
     make_preview(frames)
     print("wrote assets to", os.path.abspath(OUT))
